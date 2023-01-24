@@ -1840,8 +1840,9 @@ the cycling."
 
 (defun renpy-indent-region (start end)
   "`indent-region-function' for Renpy.
-Leaves validly-indented lines alone, i.e. doesn't indent to
-another valid position."
+START and END specify the region to indent.  Validly-indented
+lines are left alone, i.e. they are not indented to another valid
+position."
   (save-excursion
     (goto-char end)
     (setq end (point-marker))
@@ -1854,8 +1855,9 @@ another valid position."
     (move-marker end nil)))
 
 (defun renpy-block-end-p ()
-  "Non-nil if this is a line in a statement closing a block,
-or a blank line indented to where it would close a block."
+  "Return a non-nil when the current line closes a block.
+A block can be clsoed by a statement closing a block, or by a
+blank line indented to where it would close a block."
   (and (not (renpy-comment-line-p))
        (or (renpy-close-block-statement-p t)
 	   (< (current-indentation)
@@ -2120,6 +2122,7 @@ don't move and return nil.  Otherwise return t."
   "Non-strict length limit for `renpy-which-func' output.")
 
 (defun renpy-which-func ()
+  "Return the name of the function which surrounds point."
   (let ((function-name (renpy-current-defun renpy-which-func-length-limit)))
     (set-text-properties 0 (length function-name) nil function-name)
     function-name))
@@ -2188,7 +2191,7 @@ Repeat ARG times."
   "`fill-paragraph-function' handling multi-line strings and possibly comments.
 If any of the current line is in or at the end of a multi-line string,
 fill the string or the paragraph of it that point is in, preserving
-the string's indentation."
+the string's indentation.  If JUSTIFY is non-nil, justify as well."
   (interactive "P")
   (or (fill-comment-paragraph justify)
       (save-excursion
@@ -2288,14 +2291,15 @@ END lie."
   (indent-rigidly start end count))
 
 (defun renpy-outline-level ()
-  "`outline-level' function for Renpy mode.
+  "Return the `outline-mode' level.
 The level is the number of `renpy-indent' steps of indentation
 of current line."
   (1+ (/ (current-indentation) renpy-indent)))
 
 ;; Fixme: Consider top-level assignments, imports, &c.
 (defun renpy-current-defun (&optional length-limit)
-  "`add-log-current-defun-function' for Renpy."
+  "Return the name of the current function.
+Ignore names which are longer than LENGTH-LIMIT."
   (save-excursion
     ;; Move up the tree of nested `class' and `def' blocks until we
     ;; get to zero indentation, accumulating the defined names.
@@ -2432,10 +2436,12 @@ with skeleton expansions for compound statement templates.
 (custom-add-option 'renpy-mode-hook 'abbrev-mode)
 
 (defun renpy-in-literal ()
+  "Return the current syntax context."
   (syntax-ppss-context (syntax-ppss)))
 
-; Indents a paragraph. We also handle strings properly.
 (defun renpy-fill-paragraph (&optional justify)
+  "Fill the paragraph at or after point, handling strings correctly.
+If JUSTIFY is non-nil, justify as well."
   (interactive)
   (if (eq (renpy-in-literal) 'string)
       (let* ((string-indentation (renpy-string-indentation))
@@ -2444,18 +2450,20 @@ with skeleton expansions for compound statement templates.
              (fill-paragraph-function nil)
              (indent-line-function nil)
              )
-        
+
         (message "fill prefix: %S" fill-prefix)
 
         (renpy-fill-string (renpy-string-start))
         t
         )
     (renpy-fill-paragraph-2 justify)
-    )   
+    )
   )
 
-; Indents the current line. 
-(defun renpy-indent-line (&optional arg)
+(defun renpy-indent-line ()
+  "Indent the current line.
+When point is within the current indentation it will move to the
+new indentation column."
   (interactive)
 
   ; Let renpy-mode indent. (Always needed to keep python-mode sane.)
@@ -2465,7 +2473,7 @@ with skeleton expansions for compound statement templates.
   (save-excursion
     (beginning-of-line)
     (if (eq (renpy-in-literal) 'string)
-        (progn 
+        (progn
           (delete-horizontal-space)
           (indent-to (renpy-string-indentation))
           )
@@ -2476,14 +2484,14 @@ with skeleton expansions for compound statement templates.
 
   )
 
-; Computes the start of the current string.
 (defun renpy-string-start ()
+  "Return the starting position of the current string or comment.
+When outside a comment or string, return nil."
   (nth 8 (parse-partial-sexp (point-min) (point)))
   )
 
-; Computes the amount of indentation needed to put the current string
-; in the right spot.
-(defun renpy-string-indentation () 
+(defun renpy-string-indentation ()
+  "Return the start of indentation the current string."
   (+ 1
      (save-excursion
        (- (goto-char (renpy-string-start))
