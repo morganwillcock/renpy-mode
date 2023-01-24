@@ -1583,7 +1583,7 @@ Set `renpy-indent' locally to the value guessed."
 		    (setq done t))))))
 	(when done
 	  (when (/= indent (default-value 'renpy-indent))
-	    (set (make-local-variable 'renpy-indent) indent)
+	    (setq-local renpy-indent indent)
 	    (unless (= tab-width renpy-indent)
 	      (setq indent-tabs-mode nil)))
 	  indent)))))
@@ -2378,43 +2378,40 @@ with skeleton expansions for compound statement templates.
 \\{renpy-mode-map}"
   :group 'renpy
   (setq mode-name "Ren'Py")
-  (set (make-local-variable 'font-lock-defaults)
-       '(renpy-font-lock-keywords nil nil nil nil
-	 ;; This probably isn't worth it.
-	 ;; (font-lock-syntactic-face-function
-	 ;;  . renpy-font-lock-syntactic-face-function)
-	 ))
-  (set (make-local-variable 'syntax-propertize-function)
-       renpy-syntax-propertize-function)
-  (set (make-local-variable 'parse-sexp-lookup-properties) t)
-  (set (make-local-variable 'parse-sexp-ignore-comments) t)
-  (set (make-local-variable 'comment-start) "# ")
-  (set (make-local-variable 'indent-line-function) #'renpy-indent-line)
-  (set (make-local-variable 'indent-region-function) #'renpy-indent-region)
-  (set (make-local-variable 'paragraph-start) "\\s-*$")
+  (setq-local font-lock-defaults
+	      '(renpy-font-lock-keywords
+		nil nil nil nil
+		;; This probably isn't worth it.
+		;; (font-lock-syntactic-face-function
+		;;  . renpy-font-lock-syntactic-face-function)
+		))
+  (setq-local syntax-propertize-function renpy-syntax-propertize-function)
+  (setq-local parse-sexp-lookup-properties t)
+  (setq-local parse-sexp-ignore-comments t)
+  (setq-local comment-start "#")
+  (setq-local indent-line-function #'renpy-indent-line)
+  (setq-local indent-region-function #'renpy-indent-region)
+  (setq-local paragraph-start "\\s-*$")
   ;; renpy-fill-paragraph tries to call functions that do not exist.
-  ;(set (make-local-variable 'fill-paragraph-function) 'renpy-fill-paragraph)
-  (set (make-local-variable 'require-final-newline) mode-require-final-newline)
-  (set (make-local-variable 'add-log-current-defun-function)
-       #'renpy-current-defun)
-  (set (make-local-variable 'outline-regexp)
-       (rx (* space) (or "class" "def" "elif" "else" "except" "finally"
-			 "for" "if" "try" "while" "with")
-	   symbol-end))
-  (set (make-local-variable 'outline-heading-end-regexp) ":\\s-*\n")
-  (set (make-local-variable 'outline-level) #'renpy-outline-level)
-  (set (make-local-variable 'open-paren-in-column-0-is-defun-start) nil)
-  (make-local-variable 'renpy-saved-check-command)
-  (set (make-local-variable 'beginning-of-defun-function)
-       'renpy-beginning-of-defun)
-  (set (make-local-variable 'end-of-defun-function) 'renpy-end-of-defun)
+  ;(setq-local fill-paragraph-function #'renpy-fill-paragraph)
+  (setq-local require-final-newline mode-require-final-newline)
+  (setq-local add-log-current-defun-function #'renpy-current-defun)
+  (setq-local outline-regexp
+	      (rx (* space) (or "class" "def" "elif" "else" "except" "finally"
+				"for" "if" "try" "while" "with")
+		  symbol-end))
+  (setq-local outline-heading-end-regexp ":\\s-*\n")
+  (setq-local outline-level #'renpy-outline-level)
+  (setq-local open-paren-in-column-0-is-defun-start nil)
+  (setq-local beginning-of-defun-function #'renpy-beginning-of-defun)
+  (setq-local end-of-defun-function #'renpy-end-of-defun)
   (add-hook 'which-func-functions 'renpy-which-func nil t)
 
-  (setq imenu-create-index-function 'imenu-default-create-index-function)
+  (setq imenu-create-index-function #'imenu-default-create-index-function)
   (setq imenu-generic-expression renpy-generic-imenu)
 
   ;; Renpy defines TABs as being 8-char wide.
-  (set (make-local-variable 'tab-width) 8)
+  (setq-local tab-width 8)
   (when renpy-guess-indent (renpy-guess-indent))
   ;; Let's make it harder for the user to shoot himself in the foot.
   (unless (= tab-width renpy-indent)
