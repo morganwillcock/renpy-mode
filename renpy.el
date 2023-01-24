@@ -2187,7 +2187,7 @@ Repeat ARG times."
       (indent-to indent))))
 (put 'renpy-backspace 'delete-selection 'supersede)
 
-(defun renpy-fill-paragraph-2 (&optional justify)
+(defun renpy-fill-paragraph (&optional justify)
   "`fill-paragraph-function' handling multi-line strings and possibly comments.
 If any of the current line is in or at the end of a multi-line string,
 fill the string or the paragraph of it that point is in, preserving
@@ -2396,8 +2396,7 @@ with skeleton expansions for compound statement templates.
   (setq-local indent-line-function #'renpy-indent-line)
   (setq-local indent-region-function #'renpy-indent-region)
   (setq-local paragraph-start "\\s-*$")
-  ;; renpy-fill-paragraph tries to call functions that do not exist.
-  ;(setq-local fill-paragraph-function #'renpy-fill-paragraph)
+  (setq-local fill-paragraph-function #'renpy-fill-paragraph)
   (setq-local require-final-newline mode-require-final-newline)
   (setq-local add-log-current-defun-function #'renpy-current-defun)
   (setq-local outline-regexp
@@ -2438,27 +2437,6 @@ with skeleton expansions for compound statement templates.
 (defun renpy-in-literal ()
   "Return the current syntax context."
   (syntax-ppss-context (syntax-ppss)))
-
-(defun renpy-fill-paragraph (&optional justify)
-  "Fill the paragraph at or after point, handling strings correctly.
-If JUSTIFY is non-nil, justify as well."
-  (interactive)
-  (if (eq (renpy-in-literal) 'string)
-      (let* ((string-indentation (renpy-string-indentation))
-             (fill-prefix (renpy-string-fill-prefix))
-             (fill-column (- fill-column string-indentation))
-             (fill-paragraph-function nil)
-             (indent-line-function nil)
-             )
-
-        (message "fill prefix: %S" fill-prefix)
-
-        (renpy-fill-string (renpy-string-start))
-        t
-        )
-    (renpy-fill-paragraph-2 justify)
-    )
-  )
 
 (defun renpy-indent-line ()
   "Indent the current line.
