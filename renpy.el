@@ -42,7 +42,7 @@
 (eval-when-compile
   (require 'rx))
 
-(setq renpy-generic-imenu 
+(defvar renpy-generic-imenu
       '( ( nil "\\b\\(label\\|menu\\)\\s-+\\(\\w+\\):" 2)
          ( nil "\\b\\(screen\\)\\s-+\\(\\w+\\):" 2)
          ( nil "\\b\\(transform\\)\\s-+\\(\\w+\\):" 2)
