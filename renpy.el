@@ -1359,9 +1359,6 @@ Used for syntactic keywords.  N is the match number (1, 2 or 3)."
     (define-key map "\C-c\C-n" 'renpy-next-statement)
     (define-key map "\C-c\C-p" 'renpy-previous-statement)
     (define-key map "\C-c\C-u" 'renpy-beginning-of-block)
-    (define-key map "\C-c\C-f" 'renpy-describe-symbol)
-    (define-key map "\C-c\C-w" 'renpy-check)
-    (define-key map "\C-c\C-v" 'renpy-check) ; a la sgml-mode
     (easy-menu-define renpy-menu map "Ren'Py Mode menu"
       `("Ren'Py"
 	:help "Ren'Py-specific Features"
