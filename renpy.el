@@ -58,7 +58,6 @@
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.rpym?\\'" . renpy-mode))
-(add-to-list 'same-window-buffer-names "*Renpy*")
 
 ;;;; Font lock
 
