@@ -1362,8 +1362,6 @@ Used for syntactic keywords.  N is the match number (1, 2 or 3)."
     (define-key map "\C-c\C-f" 'renpy-describe-symbol)
     (define-key map "\C-c\C-w" 'renpy-check)
     (define-key map "\C-c\C-v" 'renpy-check) ; a la sgml-mode
-    (substitute-key-definition 'complete-symbol 'symbol-complete
-			       map global-map)
     (easy-menu-define renpy-menu map "Ren'Py Mode menu"
       `("Ren'Py"
 	:help "Ren'Py-specific Features"
@@ -2413,9 +2411,7 @@ with skeleton expansions for compound statement templates.
 
   (setq imenu-create-index-function 'imenu-default-create-index-function)
   (setq imenu-generic-expression renpy-generic-imenu)
-  
-  (add-hook 'completion-at-point-functions
-	    'renpy-completion-at-point nil 'local)
+
   ;; Renpy defines TABs as being 8-char wide.
   (set (make-local-variable 'tab-width) 8)
   (when renpy-guess-indent (renpy-guess-indent))
