@@ -2342,7 +2342,6 @@ Uses `renpy-beginning-of-block', `renpy-end-of-block'."
 ;; `renpy-pdbtrack-do-tracking-p' is nil.
 
 (defvar outline-heading-end-regexp)
-(defvar eldoc-documentation-function)
 (defvar renpy-mode-running)            ;Dynamically scoped var.
 
 ;;;###autoload
@@ -2416,11 +2415,6 @@ with skeleton expansions for compound statement templates.
   (setq imenu-create-index-function 'imenu-default-create-index-function)
   (setq imenu-generic-expression renpy-generic-imenu)
   
-  (set (make-local-variable 'eldoc-documentation-function)
-       #'renpy-eldoc-function)
-  (add-hook 'eldoc-mode-hook
-	    (lambda () (run-renpy nil t)) ; need it running
-	    nil t)
   (add-hook 'completion-at-point-functions
 	    'renpy-completion-at-point nil 'local)
   (set (make-local-variable 'skeleton-further-elements)
@@ -2444,7 +2438,6 @@ with skeleton expansions for compound statement templates.
 		   (lambda ()
 		     "Turn off Indent Tabs mode."
 		     (setq indent-tabs-mode nil)))
-(custom-add-option 'renpy-mode-hook 'turn-on-eldoc-mode)
 (custom-add-option 'renpy-mode-hook 'abbrev-mode)
 
 (defun renpy-in-literal ()
