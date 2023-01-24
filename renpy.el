@@ -2341,7 +2341,7 @@ Uses `renpy-beginning-of-block', `renpy-end-of-block'."
 (defvar renpy-mode-running)            ;Dynamically scoped var.
 
 ;;;###autoload
-(define-derived-mode renpy-mode fundamental-mode "Ren'Py"
+(define-derived-mode renpy-mode fundamental-mode "Ren'Py Mode"
   "Major mode for editing Renpy files.
 Turns on Font Lock mode unconditionally since it is currently required
 for correct parsing of the source.
@@ -2377,6 +2377,7 @@ with skeleton expansions for compound statement templates.
 
 \\{renpy-mode-map}"
   :group 'renpy
+  (setq mode-name "Ren'Py")
   (set (make-local-variable 'font-lock-defaults)
        '(renpy-font-lock-keywords nil nil nil nil
 	 ;; This probably isn't worth it.
