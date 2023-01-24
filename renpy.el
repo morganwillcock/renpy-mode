@@ -2410,6 +2410,8 @@ with skeleton expansions for compound statement templates.
   (setq imenu-create-index-function #'imenu-default-create-index-function)
   (setq imenu-generic-expression renpy-generic-imenu)
 
+  ;; Inhibit `electric-indent-mode'.
+  (setq electric-indent-inhibit t)
   ;; Renpy defines TABs as being 8-char wide.
   (setq-local tab-width 8)
   (when renpy-guess-indent (renpy-guess-indent))
