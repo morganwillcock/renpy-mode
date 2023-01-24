@@ -38,6 +38,10 @@
 
 ;;; Code:
 
+(require 'imenu)
+(eval-when-compile
+  (require 'rx))
+
 (setq renpy-generic-imenu 
       '( ( nil "\\b\\(label\\|menu\\)\\s-+\\(\\w+\\):" 2)
          ( nil "\\b\\(screen\\)\\s-+\\(\\w+\\):" 2)
@@ -45,14 +49,6 @@
          ; ( nil "\\bcall\\s-+\\w+\\s-+from\\s-+\\(\\w+\\)" 1)
          ( nil "\\b\\(def\\|class\\)\\s-+\\(\\w+\\)" 2)
          ))
-
-(require 'comint)
-
-(eval-when-compile
-  (require 'compile)
-  (require 'hippie-exp))
-
-(autoload 'comint-mode "comint")
 
 (defgroup renpy nil
   "Silly walks in the Renpy language."
