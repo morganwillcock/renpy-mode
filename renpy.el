@@ -2393,7 +2393,8 @@ with skeleton expansions for compound statement templates.
   (set (make-local-variable 'indent-line-function) #'renpy-indent-line)
   (set (make-local-variable 'indent-region-function) #'renpy-indent-region)
   (set (make-local-variable 'paragraph-start) "\\s-*$")
-  (set (make-local-variable 'fill-paragraph-function) 'renpy-fill-paragraph)
+  ;; renpy-fill-paragraph tries to call functions that do not exist.
+  ;(set (make-local-variable 'fill-paragraph-function) 'renpy-fill-paragraph)
   (set (make-local-variable 'require-final-newline) mode-require-final-newline)
   (set (make-local-variable 'add-log-current-defun-function)
        #'renpy-current-defun)
