@@ -2417,10 +2417,6 @@ with skeleton expansions for compound statement templates.
   
   (add-hook 'completion-at-point-functions
 	    'renpy-completion-at-point nil 'local)
-  (set (make-local-variable 'skeleton-further-elements)
-       '((< '(backward-delete-char-untabify (min renpy-indent
-						 (current-column))))
-	 (^ '(- (1+ (current-indentation))))))
   ;; Renpy defines TABs as being 8-char wide.
   (set (make-local-variable 'tab-width) 8)
   (when renpy-guess-indent (renpy-guess-indent))
