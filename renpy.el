@@ -1,40 +1,36 @@
-;;; renpy.el --- silly walks for Renpy  -*- coding: iso-8859-1 -*-
+;;; renpy.el --- Major mode for editing Ren'Py files -*- coding: iso-8859-1 -*-
 
-;; Copyright (C) 2003, 2004, 2005, 2006, 2007, 2008, 2009
+;; Copyright (C) 2003-2013
 ;;   Free Software Foundation, Inc.
-;; Copyright (C) 2018
+;; Copyright (C) 2018-2019
 ;;   Billy Wade
+;; Copyright (C) 2020
+;;   Reagan Middlebrook
+;; Copyright (C) 2023
+;;   Morgan Willcock
 
-;; Author: PyTom <pytom@bishoujo.us>
-
-;; Based on python.el, which has the following maintainership:
-
-;; Maintainer: Dave Love <fx@gnu.org>; Quildreen Motta <https://github.com/robotlolita>; Billy Wade <https://github.com/billywade>
-;; Created: Nov 2003
-;; Version: 0.3
-;; Homepage: https://github.com/billywade/renpy-mode
+;; Author: Dave Love <fx@gnu.org>, PyTom <pytom@bishoujo.us>
 ;; Keywords: languages
+;; Maintainer: Reagan Middlebrook <reagankm@gmail.com>
+;; URL: https://github.com/Reagankm/renpy-mode
+;; Version: 0.3
 
-;;; Commentary:
-
-;; PyTom's old major mode for Ren'Py, the visual studio engine
-
-;;; License:
-
-;; This file is part of GNU Emacs.
-
-;; GNU Emacs is free software: you can redistribute it and/or modify
+;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation, either version 3 of the License, or
 ;; (at your option) any later version.
 
-;; GNU Emacs is distributed in the hope that it will be useful,
+;; This program is distributed in the hope that it will be useful,
 ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; GNU General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
-;; along with GNU Emacs.  If not, see <http://www.gnu.org/licenses/>.
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;; A major mode for Ren'Py based on Dave Love's python.el.
 
 ;;; Code:
 
