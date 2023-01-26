@@ -1,4 +1,4 @@
-;;; renpy.el --- Major mode for editing Ren'Py files -*- coding: iso-8859-1 -*-
+;;; renpy.el --- Major mode for editing Ren'Py files
 
 ;; Copyright (C) 2003-2013
 ;;   Free Software Foundation, Inc.
@@ -59,7 +59,7 @@
 
 (defvar renpy-font-lock-keywords
   `(,(rx symbol-start
-	 ;; From v 2.7 reference, § keywords.
+	 ;; From v 2.7 Keywords reference.
 	 ;; def and class dealt with separately below
 	 (or "and" "as" "assert" "break" "continue" "del" "elif" "else"
 	     "except" "exec" "finally" "for" "from" "global" "if"
@@ -173,7 +173,7 @@
 "zorder"
 	     )
 	 symbol-end)
-    (,(rx symbol-start "None" symbol-end)	; see § Keywords in 2.7 manual
+    (,(rx symbol-start "None" symbol-end)	; see Keywords in 2.7 manual
      . font-lock-constant-face)
     ;; Definitions
     (,(rx symbol-start (group "class") (1+ space) (group (1+ (or word ?_))))
@@ -1275,7 +1275,7 @@
   ;; string delimiters.  Fixme: Is there a better way?
   ;; First avoid a sequence preceded by an odd number of backslashes.
   (syntax-propertize-rules
-   (;; ¡Backrefs don't work in syntax-propertize-rules!
+   (;; Backrefs don't work in syntax-propertize-rules!
     (concat "\\(?:\\([RUru]\\)[Rr]?\\|\\(?:\\=\\|[^\\]\\)\\(?:\\\\.\\)*\\)?" ;Prefix.
 	    "\\(?:\\('\\)'\\('\\)\\|\\(?2:\"\\)\"\\(?3:\"\\)\\)")
     (3 (ignore (renpy-quote-syntax))))
