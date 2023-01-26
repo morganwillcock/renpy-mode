@@ -1,4 +1,4 @@
-;;; renpy.el --- Major mode for editing Ren'Py files
+;;; renpy.el --- Major mode for editing Ren'Py files -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2003-2013
 ;;   Free Software Foundation, Inc.
