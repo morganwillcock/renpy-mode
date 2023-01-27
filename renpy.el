@@ -644,17 +644,15 @@ Do nothing if not in string."
 
 (defun renpy-open-block-statement-p (&optional bos)
   "Return non-nil if statement at point opens a block.
-BOS non-nil means point is known to be at beginning of statement."
+Any statement that ends in a colon opens a block.  BOS non-nil
+means point is known to be at beginning of statement."
   (save-excursion
     (unless bos (renpy-beginning-of-statement))
-
-    ; A statement opens a block if it ends with :.
-    (renpy-end-of-statement)
-    (equal (char-before) 58)))
-
-    ;; (looking-at (rx (and (or "if" "else" "elif" "while" "for" "def"
-    ;;     		     "class" "try" "except" "finally" "with")
-    ;;     		 symbol-end)))))
+    (and (< (point) (progn
+		      (renpy-end-of-statement)
+		      (renpy-skip-comments-blanks t)
+		      (point)))
+	 (eq ?: (char-before)))))
 
 (defun renpy-close-block-statement-p (&optional bos)
   "Return non-nil if current line is a statement closing a block.
