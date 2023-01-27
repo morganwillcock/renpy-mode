@@ -1506,7 +1506,7 @@ Uses `renpy-beginning-of-block', `renpy-end-of-block'."
 (defvar renpy-mode-running)            ;Dynamically scoped var.
 
 ;;;###autoload
-(define-derived-mode renpy-mode fundamental-mode "Ren'Py Mode"
+(define-derived-mode renpy-mode prog-mode "Ren'Py Mode"
   "Major mode for editing Renpy files.
 Turns on Font Lock mode unconditionally since it is currently required
 for correct parsing of the source.
