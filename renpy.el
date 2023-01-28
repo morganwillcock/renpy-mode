@@ -1322,7 +1322,7 @@ don't move and return nil.  Otherwise return t."
 ;; renpy-beginning-of-defun             265         0.0918479999  0.0003465962
 ;; renpy-skip-comments-blanks           3125        0.0753319999  2.410...e-05
 
-(defvar renpy-recursing)
+
 ;;;; `Electric' commands.
 
 (defun renpy-electric-colon (arg)
@@ -1538,12 +1538,6 @@ Uses `renpy-beginning-of-block', `renpy-end-of-block'."
   (exchange-point-and-mark))
 
 ;;;; Modes.
-
-;; pdb tracking is alert once this file is loaded, but takes no action if
-;; `renpy-pdbtrack-do-tracking-p' is nil.
-
-(defvar outline-heading-end-regexp)
-(defvar renpy-mode-running)            ;Dynamically scoped var.
 
 ;;;###autoload
 (define-derived-mode renpy-mode prog-mode "Ren'Py Mode"
