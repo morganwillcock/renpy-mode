@@ -1368,67 +1368,88 @@ Repeat ARG times."
 
 (defun renpy-fill-paragraph (&optional justify)
   "`fill-paragraph-function' handling multi-line strings and possibly comments.
-If any of the current line is in or at the end of a multi-line string,
-fill the string or the paragraph of it that point is in, preserving
-the string's indentation.  If JUSTIFY is non-nil, justify as well."
+
+For Ren'Py dialogue, if point is within a string, fill the string
+with a prefix which aligns with the string indentation position.
+
+Otherwise, if any of the current line is in or at the end of a
+multi-line string, fill the string or the paragraph of it that
+point is in, preserving the string's indentation.
+
+If JUSTIFY is non-nil, justify as well."
   (interactive "P")
-  (or (fill-comment-paragraph justify)
-      (save-excursion
-	(end-of-line)
-	(let* ((syntax (syntax-ppss))
-	       (orig (point))
-	       start end)
-	  (cond ((nth 4 syntax)	; comment.   fixme: loses with trailing one
-		 (let (fill-paragraph-function)
-		   (fill-paragraph justify)))
-		;; The `paragraph-start' and `paragraph-separate'
-		;; variables don't allow us to delimit the last
-		;; paragraph in a multi-line string properly, so narrow
-		;; to the string and then fill around (the end of) the
-		;; current line.
-		((nth 3 syntax)	; in fenced string
-		 (goto-char (nth 8 syntax)) ; string start
-		 (setq start (line-beginning-position))
-		 (setq end (condition-case () ; for unbalanced quotes
-			       (progn (forward-sexp)
-				      (- (point) 3))
-			     (error (point-max)))))
-		((re-search-backward "\\s|\\s-*\\=" nil t) ; end of fenced string
-		 (forward-char)
-		 (setq end (point))
-		 (condition-case ()
-		     (progn (backward-sexp)
-			    (setq start (line-beginning-position)))
-		   (error nil))))
-	  (when end
-	    (save-restriction
-	      (narrow-to-region start end)
-	      (goto-char orig)
-	      ;; Avoid losing leading and trailing newlines in doc
-	      ;; strings written like:
-	      ;;   """
-	      ;;   ...
-	      ;;   """
-	      (let ((paragraph-separate
-		     ;; Note that the string could be part of an
-		     ;; expression, so it can have preceding and
-		     ;; trailing non-whitespace.
-		     (concat
-		      (rx (or
-			   ;; Opening triple quote without following text.
-			   (and (* nonl)
-				(group (syntax string-delimiter))
-				(repeat 2 (backref 1))
-				;; Fixme:  Not sure about including
-				;; trailing whitespace.
-				(* (any " \t"))
-				eol)
-			   ;; Closing trailing quote without preceding text.
-			   (and (group (any ?\" ?')) (backref 2)
-				(syntax string-delimiter))))
-		      "\\(?:" paragraph-separate "\\)"))
-		    fill-paragraph-function)
-		(fill-paragraph justify))))))) t)
+  (cond
+   ((fill-comment-paragraph justify))
+   ;; Ren'Py dialogue.
+   ((and (renpy-in-script-statement-p)
+	 (let ((syntax (syntax-ppss)))
+	   (when (nth 3 syntax)
+	     (save-excursion
+	       (goto-char (nth 8 syntax))
+	       ;; Check this is a single quoted string.	 For triple-quoted
+	       ;; strings the python docstring filling should be fine.
+	       (when (eq (skip-syntax-forward "|\"") 1)
+		 (let ((fill-prefix (make-string (current-column) ?\s))
+		       fill-paragraph-function)
+		   (fill-paragraph justify))))))))
+   ;; Original Python.
+   (t
+    (save-excursion
+      (end-of-line)
+      (let* ((syntax (syntax-ppss))
+	     (orig (point))
+	     start end)
+	(cond ((nth 4 syntax)	; comment.   fixme: loses with trailing one
+	       (let (fill-paragraph-function)
+		 (fill-paragraph justify)))
+	      ;; The `paragraph-start' and `paragraph-separate'
+	      ;; variables don't allow us to delimit the last
+	      ;; paragraph in a multi-line string properly, so narrow
+	      ;; to the string and then fill around (the end of) the
+	      ;; current line.
+	      ((nth 3 syntax)	; in fenced string
+	       (goto-char (nth 8 syntax)) ; string start
+	       (setq start (line-beginning-position))
+	       (setq end (condition-case () ; for unbalanced quotes
+			     (progn (forward-sexp)
+				    (- (point) 3))
+			   (error (point-max)))))
+	      ((re-search-backward "\\s|\\s-*\\=" nil t) ; end of fenced string
+	       (forward-char)
+	       (setq end (point))
+	       (condition-case ()
+		   (progn (backward-sexp)
+			  (setq start (line-beginning-position)))
+		 (error nil))))
+	(when end
+	  (save-restriction
+	    (narrow-to-region start end)
+	    (goto-char orig)
+	    ;; Avoid losing leading and trailing newlines in doc
+	    ;; strings written like:
+	    ;;   """
+	    ;;   ...
+	    ;;   """
+	    (let ((paragraph-separate
+		   ;; Note that the string could be part of an
+		   ;; expression, so it can have preceding and
+		   ;; trailing non-whitespace.
+		   (concat
+		    (rx (or
+			 ;; Opening triple quote without following text.
+			 (and (* nonl)
+			      (group (syntax string-delimiter))
+			      (repeat 2 (backref 1))
+			      ;; Fixme:  Not sure about including
+			      ;; trailing whitespace.
+			      (* (any " \t"))
+			      eol)
+			 ;; Closing trailing quote without preceding text.
+			 (and (group (any ?\" ?')) (backref 2)
+			      (syntax string-delimiter))))
+		    "\\(?:" paragraph-separate "\\)"))
+		  fill-paragraph-function)
+	      (fill-paragraph justify)))))))))
 
 (defun renpy-shift-left (start end &optional count)
   "Shift lines in region COUNT (the prefix arg) columns to the left.
