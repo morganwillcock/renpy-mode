@@ -893,8 +893,8 @@ Set `renpy-indent' locally to the value guessed."
 			(point)))))
 
 (defconst renpy-block-pairs
-  '(("else" "if" "elif" "while" "for" "try" "except")
-    ("elif" "if" "elif")
+  '(("else" "if" "showif" "elif" "while" "for" "try" "except")
+    ("elif" "if" "showif" "elif")
     ("except" "try" "except")
     ("finally" "else" "try" "except"))
   "Alist of keyword matches.
