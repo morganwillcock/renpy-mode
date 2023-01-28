@@ -521,6 +521,7 @@ Used for syntactic keywords.  N is the match number (1, 2 or 3)."
     (define-key map "\C-c<" #'renpy-shift-left)
     (define-key map "\C-c>" #'renpy-shift-right)
     (define-key map "\C-c\C-k" #'renpy-mark-block)
+    (define-key map "\C-c\C-j" #'imenu)
     (define-key map "\C-c\C-n" #'renpy-next-statement)
     (define-key map "\C-c\C-p" #'renpy-previous-statement)
     (define-key map "\C-c\C-u" #'renpy-beginning-of-block)
