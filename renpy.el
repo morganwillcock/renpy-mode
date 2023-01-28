@@ -516,14 +516,14 @@ Used for syntactic keywords.  N is the match number (1, 2 or 3)."
 (defvar renpy-mode-map
   (let ((map (make-sparse-keymap)))
     ;; Mostly taken from renpy-mode.el.
-    (define-key map ":" 'renpy-electric-colon)
-    (define-key map "\177" 'renpy-backspace)
-    (define-key map "\C-c<" 'renpy-shift-left)
-    (define-key map "\C-c>" 'renpy-shift-right)
-    (define-key map "\C-c\C-k" 'renpy-mark-block)
-    (define-key map "\C-c\C-n" 'renpy-next-statement)
-    (define-key map "\C-c\C-p" 'renpy-previous-statement)
-    (define-key map "\C-c\C-u" 'renpy-beginning-of-block)
+    (define-key map ":" #'renpy-electric-colon)
+    (define-key map "\177" #'renpy-backspace)
+    (define-key map "\C-c<" #'renpy-shift-left)
+    (define-key map "\C-c>" #'renpy-shift-right)
+    (define-key map "\C-c\C-k" #'renpy-mark-block)
+    (define-key map "\C-c\C-n" #'renpy-next-statement)
+    (define-key map "\C-c\C-p" #'renpy-previous-statement)
+    (define-key map "\C-c\C-u" #'renpy-beginning-of-block)
     (easy-menu-define renpy-menu map "Ren'Py Mode menu"
       `("Ren'Py"
 	:help "Ren'Py-specific Features"
