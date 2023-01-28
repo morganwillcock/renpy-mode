@@ -48,9 +48,10 @@
          ))
 
 (defgroup renpy nil
-  "Silly walks in the Renpy language."
+  "Major mode for editing Ren'Py files."
+  :tag "Ren'Py"
+  :prefix "renpy-"
   :group 'languages
-  :version "22.1"
   :link '(emacs-commentary-link "renpy"))
 
 ;;;###autoload
