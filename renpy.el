@@ -768,21 +768,34 @@ Set `renpy-indent' locally to the value guessed."
 	  start)
       (cond
        ((eq 'string (syntax-ppss-context syntax)) ; multi-line string
-	(if (not renpy-indent-string-contents)
-	    (current-indentation)
-	  ;; Only respect `renpy-indent-string-contents' in doc
-	  ;; strings (defined as those which form statements).
-	  (if (not (save-excursion
-		     (renpy-beginning-of-statement)
-		     (looking-at (rx (or (syntax string-delimiter)
-					 (syntax string-quote))))))
-	      (current-indentation)
-	    ;; Find indentation of preceding non-blank line within string.
-	    (setq start (nth 8 syntax))
-	    (forward-line -1)
-	    (while (and (< start (point)) (looking-at "\\s-*$"))
-	      (forward-line -1))
-	    (current-indentation))))
+	(cond
+	 ;; Indentation for Ren'Py dialogue strings, which are allowed to
+	 ;; span multiple lines.
+	 ;; FIXME: Should this be a user preference?
+	 ((renpy-in-script-statement-p)
+	  (goto-char (nth 8 syntax))
+	  (+ (current-column) (if (eq (skip-syntax-forward "|\"") 1)
+				  ;; Align with the inside of a single quote.
+				  1
+				;; No adjustment for a triple quote.
+				;; FIXME: Should this be a user preference?
+				0)))
+	 ((not renpy-indent-string-contents)
+	  (current-indentation))
+	 ;; Only respect `renpy-indent-string-contents' in doc
+	 ;; strings (defined as those which form statements).
+	 ((not (save-excursion
+		 (renpy-beginning-of-statement)
+		 (looking-at (rx (or (syntax string-delimiter)
+				     (syntax string-quote))))))
+	  (current-indentation))
+	 (t
+	  ;; Find indentation of preceding non-blank line within string.
+	  (setq start (nth 8 syntax))
+	  (forward-line -1)
+	  (while (and (< start (point)) (looking-at "\\s-*$"))
+	    (forward-line -1))
+	  (current-indentation))))
        ((renpy-continuation-line-p)   ; after backslash, or bracketed
 	(let ((point (point))
 	      (open-start (cadr syntax))
@@ -973,7 +986,7 @@ indentation if it is valid, i.e. one of the positions returned by
       (if (> (- (point-max) pos) (point))
 	  (goto-char (- (point-max) pos))))))
 
-(defun renpy-indent-line-2 ()
+(defun renpy-indent-line ()
   "Indent current line as Renpy code.
 When invoked via `indent-for-tab-command', cycle through possible
 indentations for current line.  The cycle is broken by a command
@@ -1276,6 +1289,12 @@ don't move and return nil.  Otherwise return t."
 			  (throw 'done t)))))))
       (setq arg (1- arg)))
     (zerop arg)))
+
+(defun renpy-in-script-statement-p ()
+  "Return a non-nil value when point is within the main game script."
+  (save-excursion
+    (or (null (renpy-beginning-of-block))
+	(looking-at-p (renpy-rx label-keyword)))))
 
 (defvar renpy-which-func-length-limit 40
   "Non-strict length limit for `renpy-which-func' output.")
@@ -1592,51 +1611,6 @@ with skeleton expansions for compound statement templates.
 		     "Turn off Indent Tabs mode."
 		     (setq indent-tabs-mode nil)))
 (custom-add-option 'renpy-mode-hook 'abbrev-mode)
-
-(defun renpy-in-literal ()
-  "Return the current syntax context."
-  (syntax-ppss-context (syntax-ppss)))
-
-(defun renpy-indent-line ()
-  "Indent the current line.
-When point is within the current indentation it will move to the
-new indentation column."
-  (interactive)
-
-  ; Let renpy-mode indent. (Always needed to keep python-mode sane.)
-  (renpy-indent-line-2)
-
-  ; Reindent strings if appropriate.
-  (save-excursion
-    (beginning-of-line)
-    (if (eq (renpy-in-literal) 'string)
-        (progn
-          (delete-horizontal-space)
-          (indent-to (renpy-string-indentation))
-          )
-      ))
-
-  (if ( < (current-column) (current-indentation) )
-      (back-to-indentation) )
-
-  )
-
-(defun renpy-string-start ()
-  "Return the starting position of the current string or comment.
-When outside a comment or string, return nil."
-  (nth 8 (parse-partial-sexp (point-min) (point)))
-  )
-
-(defun renpy-string-indentation ()
-  "Return the start of indentation the current string."
-  (+ 1
-     (save-excursion
-       (- (goto-char (renpy-string-start))
-          (progn (beginning-of-line) (point)))
-       )
-     )
-  )
-
 
 (provide 'renpy)
 
