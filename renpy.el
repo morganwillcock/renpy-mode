@@ -478,8 +478,7 @@ Used for syntactic keywords.  N is the match number (1, 2 or 3)."
        (t
 	;; Consider property for initial char, accounting for prefixes.
 	(put-text-property (match-beginning 2) (match-end 2)
-			   'syntax-table (string-to-syntax "|"))))
-      )))
+			   'syntax-table (string-to-syntax "|")))))))
 
 ;; This isn't currently in `font-lock-defaults' as probably not worth
 ;; it -- we basically only mess with a few normally-symbol characters.
