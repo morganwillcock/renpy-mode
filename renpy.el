@@ -878,10 +878,11 @@ Set `renpy-indent' locally to the value guessed."
     (buffer-substring (progn
 			(back-to-indentation)
 			(point))
-		      (progn
-			(end-of-line)
-			(forward-comment -1)
-			(point)))))
+		      (max (point)
+			   (progn
+			     (end-of-line)
+			     (renpy-skip-comments-blanks t)
+			     (point))))))
 
 (defconst renpy-block-pairs
   '(("else" "if" "showif" "elif" "while" "for" "try" "except")
