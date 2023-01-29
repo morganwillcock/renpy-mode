@@ -49,7 +49,6 @@
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.rpym?\\'" . renpy-mode))
 
-
 ;;;; Search patterns
 
 (defmacro renpy-rx (&rest regexps)
@@ -869,7 +868,7 @@ Set `renpy-indent' locally to the value guessed."
 			   (list elt))))))
 	(caar (last renpy-indent-list)))))))
 
-;;;; Cycling through the possible indentations with successive TABs.
+;; Cycling through the possible indentations with successive TABs.
 
 ;; These don't need to be buffer-local since they're only relevant
 ;; during a cycle.
@@ -1238,12 +1237,12 @@ Otherwise return non-nil."
 	    (not (goto-char point))	; return nil
 	  ;; Look upwards for less indented statement.
 	  (if (catch 'done
-;;; This is slower than the below.
-;;; 	  (while (zerop (renpy-previous-statement))
-;;; 	    (when (and (< (current-indentation) ci)
-;;; 		       (renpy-open-block-statement-p t))
-;;; 	      (beginning-of-line)
-;;; 	      (throw 'done t)))
+;; This is slower than the below.
+;; 	  (while (zerop (renpy-previous-statement))
+;; 	    (when (and (< (current-indentation) ci)
+;; 		       (renpy-open-block-statement-p t))
+;; 	      (beginning-of-line)
+;; 	      (throw 'done t)))
 		(while (and (zerop (forward-line -1)))
 		  (when (and (< (current-indentation) ci)
 			     (not (renpy-comment-line-p))
@@ -1298,7 +1297,6 @@ don't move and return nil.  Otherwise return t."
   (let ((function-name (renpy-current-defun renpy-which-func-length-limit)))
     (set-text-properties 0 (length function-name) nil function-name)
     function-name))
-
 
 ;;;; Imenu.
 
@@ -1310,7 +1308,7 @@ don't move and return nil.  Otherwise return t."
     ("/screen" ,(renpy-rx screen-keyword (1+ space) (group name)) 1)
     ("/style" ,(renpy-rx style-keyword (1+ space) (group name)) 1)
     ("/transform" ,(renpy-rx transform-keyword (1+ space) (group name)) 1)))
-
+
 ;;;; `Electric' commands.
 
 (defun renpy-electric-colon (arg)
@@ -1526,7 +1524,7 @@ Uses `renpy-beginning-of-block', `renpy-end-of-block'."
   (push-mark (point) nil t)
   (renpy-end-of-block)
   (exchange-point-and-mark))
-
+
 ;;;; Modes.
 
 ;;;###autoload
