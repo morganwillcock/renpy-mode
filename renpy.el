@@ -1494,8 +1494,10 @@ END lie."
 (defun renpy-outline-level ()
   "Return the `outline-mode' level.
 The level is the number of `renpy-indent' steps of indentation
-of current line."
-  (1+ (/ (current-indentation) renpy-indent)))
+of current statement."
+  (save-excursion
+    (renpy-beginning-of-statement)
+    (1+ (/ (current-indentation) renpy-indent))))
 
 ;; Fixme: Consider top-level assignments, imports, &c.
 (defun renpy-current-defun (&optional length-limit)
@@ -1595,10 +1597,7 @@ with skeleton expansions for compound statement templates.
   (setq-local require-final-newline mode-require-final-newline)
   (setq-local add-log-current-defun-function #'renpy-current-defun)
   (setq-local outline-regexp
-	      (rx (* space) (or "class" "def" "elif" "else" "except" "finally"
-				"for" "if" "try" "while" "with")
-		  symbol-end))
-  (setq-local outline-heading-end-regexp ":\\s-*\n")
+	      (rx (1+ not-newline) ?: (0+ space) (or (syntax <) eol)))
   (setq-local outline-level #'renpy-outline-level)
   (setq-local open-paren-in-column-0-is-defun-start nil)
   (setq-local beginning-of-defun-function #'renpy-beginning-of-defun)
