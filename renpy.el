@@ -1597,12 +1597,9 @@ with skeleton expansions for compound statement templates.
 
   ;; Inhibit `electric-indent-mode'.
   (setq electric-indent-inhibit t)
-  ;; Renpy defines TABs as being 8-char wide.
-  (setq-local tab-width 8)
+  ;; Setup indentation (Ren'Py cannot use tabs)
   (when renpy-guess-indent (renpy-guess-indent))
-  ;; Let's make it harder for the user to shoot himself in the foot.
-  (unless (= tab-width renpy-indent)
-    (setq indent-tabs-mode nil)))
+  (setq indent-tabs-mode nil))
 
 ;; Not done automatically in Emacs 21 or 22.
 (defcustom renpy-mode-hook nil
@@ -1610,10 +1607,6 @@ with skeleton expansions for compound statement templates.
   :group 'renpy
   :type 'hook)
 (custom-add-option 'renpy-mode-hook 'imenu-add-menubar-index)
-(custom-add-option 'renpy-mode-hook
-		   (lambda ()
-		     "Turn off Indent Tabs mode."
-		     (setq indent-tabs-mode nil)))
 (custom-add-option 'renpy-mode-hook 'abbrev-mode)
 
 (provide 'renpy)
