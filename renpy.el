@@ -39,14 +39,6 @@
 (eval-when-compile
   (require 'rx))
 
-(defvar renpy-generic-imenu
-      '( ( nil "\\b\\(label\\|menu\\)\\s-+\\(\\w+\\):" 2)
-         ( nil "\\b\\(screen\\)\\s-+\\(\\w+\\):" 2)
-         ( nil "\\b\\(transform\\)\\s-+\\(\\w+\\):" 2)
-         ; ( nil "\\bcall\\s-+\\w+\\s-+from\\s-+\\(\\w+\\)" 1)
-         ( nil "\\b\\(def\\|class\\)\\s-+\\(\\w+\\)" 2)
-         ))
-
 (defgroup renpy nil
   "Major mode for editing Ren'Py files."
   :tag "Ren'Py"
@@ -1310,18 +1302,14 @@ don't move and return nil.  Otherwise return t."
 
 ;;;; Imenu.
 
-;; For possibly speeding this up, here's the top of the ELP profile
-;; for rescanning pydoc.py (2.2k lines, 90kb):
-;; Function Name                         Call Count  Elapsed Time  Average Time
-;; ====================================  ==========  =============  ============
-;; renpy-imenu-create-index             156         2.430906      0.0155827307
-;; renpy-end-of-defun                   155         1.2718260000  0.0082053290
-;; renpy-end-of-block                   155         1.1898689999  0.0076765741
-;; renpy-next-statement                 2970        1.024717      0.0003450225
-;; renpy-end-of-statement               2970        0.4332190000  0.0001458649
-;; renpy-beginning-of-defun             265         0.0918479999  0.0003465962
-;; renpy-skip-comments-blanks           3125        0.0753319999  2.410...e-05
-
+(defvar renpy-generic-imenu
+  `((nil ,(renpy-rx label-keyword (1+ space) (group name)) 1)
+    ("/class" ,(renpy-rx symbol-start "class" (1+ space) (group name)) 1)
+    ("/function" ,(renpy-rx symbol-start "def" (1+ space) (group name)) 1)
+    ("/image" ,(renpy-rx image-keyword (1+ space) (group name)) 1)
+    ("/screen" ,(renpy-rx screen-keyword (1+ space) (group name)) 1)
+    ("/style" ,(renpy-rx style-keyword (1+ space) (group name)) 1)
+    ("/transform" ,(renpy-rx transform-keyword (1+ space) (group name)) 1)))
 
 ;;;; `Electric' commands.
 
