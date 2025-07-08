@@ -1526,7 +1526,7 @@ Ignore names which are longer than LENGTH-LIMIT."
       (when accum
 	(when (and length-limit (> length length-limit))
 	  (setcar accum ".."))
-	(mapconcat 'identity accum ".")))))
+	(mapconcat #'identity accum ".")))))
 
 (defun renpy-mark-block ()
   "Mark the block around point.
@@ -2185,7 +2185,7 @@ with skeleton expansions for compound statement templates.
   (setq-local open-paren-in-column-0-is-defun-start nil)
   (setq-local beginning-of-defun-function #'renpy-beginning-of-defun)
   (setq-local end-of-defun-function #'renpy-end-of-defun)
-  (add-hook 'which-func-functions 'renpy-which-func nil t)
+  (add-hook 'which-func-functions #'renpy-which-func nil t)
 
   (setq imenu-create-index-function #'imenu-default-create-index-function)
   (setq imenu-generic-expression renpy-generic-imenu)
